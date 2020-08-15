@@ -1,2 +1,5 @@
-/.idea/.idea.NeuralNetworks/
-/NeuralNetworks/obj/
+/.idea/.idea.NeuralNetworks/*
+/NeuralNetworks/obj/*
+/NeuralNetworks/bin/Debug/*
+/NNApp/obj/*
+/NNApp/bin/Debug/*
