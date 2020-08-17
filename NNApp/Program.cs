@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 using NeuralNetworks;
 
 namespace NNApp
@@ -10,13 +11,15 @@ namespace NNApp
     {
         static void Main(string[] args)
         {
-            var m = Matrix<double>.Build.Random(500, 500);
-            var v = MathNet.Numerics.LinearAlgebra.Vector<double>.Build.Random(500);
-            var y = m.Solve(v);
-            Console.WriteLine(y);
-            Console.WriteLine(m);
-
-            var tensor = new Vector4();
+            var input = Matrix<double>.Build.Dense(10, 1, 10);
+            var weights = Matrix<double>.Build.Dense(1, 10, 0.001);
+            var bias = Matrix<double>.Build.Dense(1, 1, 1);
+            
+            var node = new Node();
+            var Z = node.Linear(input, weights, bias);
+            var A = node.Relu(Z);
+            
+            Console.WriteLine(A);
         }
     }
 }

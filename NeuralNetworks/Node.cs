@@ -10,7 +10,7 @@ namespace NeuralNetworks
         {
             return W * X + b ;
         }
-
+        
         public Matrix<double> Relu(Matrix<double> z)
         {
             var activation = z.Map(val => Math.Max(0, val));            
