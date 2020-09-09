@@ -1,22 +1,35 @@
+using System;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace NeuralNetworks
 {
     public class Layer
     {
-        public List<Node> Nodes { get; set; }
         public Matrix<double> Weight { get; set; }
         public Matrix<double> Bias { get; set; }
 
-        public Layer()
+        public Layer(int size, int previous)
         {
-            Nodes = new List<Node>();
-            Nodes.Add(new Node());
-            
-            Weight = Matrix<double>.Build.Dense(Nodes.Count, 1, 0.01);
-            Bias = Matrix<double>.Build.Dense(Nodes.Count, Nodes.Count, 0);
+            Weight = Matrix<double>.Build.Random(size, previous) / 100;
+            Bias = Matrix<double>.Build.Dense(size, size, 0);
+        }
+        
+        private Matrix<double> LinearFunction(Matrix<double> input)
+        {
+            return Weight * input + Bias ;
+        }
+        
+        private Matrix<double> Relu(Matrix<double> z)
+        {
+            var activation = z.Map(val => Math.Max(0, val));            
+            return activation;
+        }
+
+        private Matrix<double> Sigmoid(Matrix<double> z)
+        {
+            var activation = 1 / (1 + z.Map(val => Math.Exp(-val)));
+            return activation;
         }
     }
 }
