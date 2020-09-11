@@ -15,12 +15,12 @@ namespace NeuralNetworks
             Bias = Matrix<double>.Build.Dense(size, size, 0);
         }
         
-        private Matrix<double> LinearFunction(Matrix<double> input)
+        public Matrix<double> LinearFunction(Matrix<double> input)
         {
             return Weight * input + Bias ;
         }
         
-        private Matrix<double> Relu(Matrix<double> z)
+        public Matrix<double> Relu(Matrix<double> z)
         {
             var activation = z.Map(val => Math.Max(0, val));            
             return activation;
