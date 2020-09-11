@@ -1,22 +1,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra.Double;
-using NeuralNetworks;
 using NUnit.Framework;
 
-namespace NeuralNetwork.Test
+namespace NeuralNetworks.Test
 {
     [TestFixture]
     public class NeuralNetworkTests
     {
-        private Network subject;
+        private NeuralNetwork _subject;
 
         [SetUp]
         public void SetUp()
         {
             var input = Matrix.Build.Dense(10, 1, 1);
             var layers = new List<int> { 3, 2, 1 };
-            subject = new Network(layers, input);
+            var config = new NeuralNetworkConfiguration
+            {
+                Cost = Cost.Logistic
+            };
+            _subject = NeuralNetworkFactory.Create(layers, input, config);
         }
 
         [Test]
@@ -28,7 +31,7 @@ namespace NeuralNetwork.Test
                 new Layer(2, 3),
                 new Layer(1, 2)
             };
-            var result = subject.Layers.Count;
+            var result = _subject.Layers.Count;
 
             Assert.That(result, Is.EqualTo(expected.Count));
         }
@@ -38,8 +41,8 @@ namespace NeuralNetwork.Test
         {
             var rowExpected = 3;
             var colExpected = 10;
-            var rowResult = subject.Layers.First().Weight.RowCount;
-            var colResult = subject.Layers.First().Weight.ColumnCount;
+            var rowResult = _subject.Layers.First().Weight.RowCount;
+            var colResult = _subject.Layers.First().Weight.ColumnCount;
 
             Assert.That(rowResult, Is.EqualTo(rowExpected));
             Assert.That(colResult, Is.EqualTo(colExpected));
@@ -55,11 +58,11 @@ namespace NeuralNetwork.Test
             {
                 weight1, weight2, weight3
             };
-            for (int i = 0; i < subject.Weights.Count; i++)
+            for (int i = 0; i < _subject.Weights.Count; i++)
             {
-                var rowCount = subject.Weights[i].RowCount;
+                var rowCount = _subject.Weights[i].RowCount;
                 var rowExpected = weights[i][0];
-                var colCount = subject.Weights[i].ColumnCount;
+                var colCount = _subject.Weights[i].ColumnCount;
                 var colExpected = weights[i][1];
                 
                 Assert.That(rowCount, Is.EqualTo(rowExpected));
@@ -70,10 +73,11 @@ namespace NeuralNetwork.Test
         [Test]
         public void LossFunction_ReturnsAnInt_WhenYIs_Nx1_AndYHatIs_1xM()
         {
+            var logistic = new LogisticRegression();
             var y = Matrix.Build.Dense(10, 1);
             var yHat = Matrix.Build.Dense(1, 10);
 
-            var result = subject.LossFunction(y, yHat);
+            var result = _subject.ComputeCost(y, yHat, logistic);
 
             Assert.That(result, Is.TypeOf<double>());
         }

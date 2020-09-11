@@ -11,15 +11,15 @@ namespace NNApp
     {
         static void Main(string[] args)
         {
-            var input = Matrix<double>.Build.Dense(10, 1, 10);
-            var weights = Matrix<double>.Build.Dense(1, 10, 0.001);
-            var bias = Matrix<double>.Build.Dense(1, 1, 1);
-            
-            var node = new Node();
-            var Z = node.Linear(input, weights, bias);
-            var A = node.Relu(Z);
-            
-            Console.WriteLine(A);
+            var input = Matrix.Build.Dense(10, 1, 1);
+            var layers = new List<int> {3, 2, 1};
+            var config = new NeuralNetworkConfiguration()
+            {
+                Cost = Cost.Linear
+            };
+            var network = NeuralNetworkFactory.Create(layers, input, config);
+            network.Train();
+            // var pred = network2.Predict(testX);
         }
     }
 }

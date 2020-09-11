@@ -68,5 +68,10 @@ namespace NeuralNetworks
             var output = input;
             return output;
         }
+
+        public double ComputeCost(Matrix<double> y, Matrix<double> yHat, ICost costFunction)
+        {
+            return costFunction.ComputeCost(y, yHat);
+        }
     }
 }
