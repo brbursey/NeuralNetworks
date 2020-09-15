@@ -9,21 +9,30 @@ namespace NeuralNetworks.Test
     public class NeuralNetworkTests
     {
         private NeuralNetwork _subject;
-
+        private List<int> _layers;
+        private Dataset _dataset;
+        private NeuralNetworkConfiguration _config;
+        
         [SetUp]
         public void SetUp()
         {
-            var input = Matrix.Build.Dense(10, 1, 1);
-            var layers = new List<int> { 3, 2, 1 };
-            var config = new NeuralNetworkConfiguration
+            _dataset = new Dataset
+            {
+                X = new Data
+                {
+                    Value = Matrix.Build.Dense(10, 1, 1)
+                }
+            };
+            _layers = new List<int> { 3, 2, 1 };
+            _config = new NeuralNetworkConfiguration
             {
                 Cost = Cost.Logistic
             };
-            _subject = NeuralNetworkFactory.Create(layers, input, config);
+            _subject = NeuralNetworkFactory.Create(_layers, _dataset, _config);
         }
-
+        
         [Test]
-        public void NeuralNetwork_CreatesANetwork_GivenTheNodesInEachLayer()
+        public void NeuralNetwork_InitializeParameters_CreatesANetwork_GivenTheNodesInEachLayer()
         {
             var expected = new List<Layer>
             {
@@ -37,7 +46,7 @@ namespace NeuralNetworks.Test
         }
 
         [Test]
-        public void NeuralNetwork_FirstLayerWeightHasSize3x10()
+        public void NeuralNetwork_InitializeParameters_FirstLayerWeightHasSize3x10()
         {
             var rowExpected = 3;
             var colExpected = 10;
@@ -49,7 +58,7 @@ namespace NeuralNetworks.Test
         }
 
         [Test]
-        public void NeuralNetwork_WeightsIsProperSize()
+        public void NeuralNetwork_InitializeParameters_WeightsAreProperSize()
         {
             var weight1 = new List<int> { 3, 10 };
             var weight2 = new List<int> { 2, 3 };
@@ -69,15 +78,33 @@ namespace NeuralNetworks.Test
                 Assert.That(colCount, Is.EqualTo(colExpected));
             }
         }
+
+        // [Test]
+        // public void NeuralNetwork_Train_UpdatesParametersAfterCalled()
+        // {
+        //     var preResult = _subject.Weights
+        //         .First()
+        //         .Enumerate()
+        //         .First();
+        //     
+        //     _subject.Train(1);
+        //
+        //     var postResult = _subject.Weights
+        //         .First()
+        //         .Enumerate()
+        //         .First();
+        //
+        //     Assert.That(preResult, Is.Not.EqualTo(postResult));
+        // }
         
         [Test]
-        public void LossFunction_ReturnsAnInt_WhenYIs_Nx1_AndYHatIs_1xM()
+        public void NeuralNetwork_LossFunction_ReturnsAnInt_WhenYIs_Nx1_AndYHatIs_1xM()
         {
-            var logistic = new LogisticRegression();
+            //var logistic = new LogisticRegression();
             var y = Matrix.Build.Dense(10, 1);
             var yHat = Matrix.Build.Dense(1, 10);
 
-            var result = _subject.ComputeCost(y, yHat, logistic);
+            var result = _subject.ComputeCost(y, yHat);
 
             Assert.That(result, Is.TypeOf<double>());
         }

@@ -6,10 +6,9 @@ namespace NeuralNetworks
 {
     public static class NeuralNetworkFactory
     {
-        public static NeuralNetwork Create(List<int> layers, Matrix<double> input, NeuralNetworkConfiguration config)
+        public static NeuralNetwork Create(List<int> layers, Dataset trainingData, NeuralNetworkConfiguration config)
         {
             ICost cost;
-            NeuralNetwork network;
             switch (config.Cost)
             {
                 case Cost.Linear:
@@ -22,13 +21,14 @@ namespace NeuralNetworks
                     throw new ArgumentException("Must use a valid cost function");
             }
             
-            return new NeuralNetwork(layers, input, cost);
+            return new NeuralNetwork(layers, trainingData, cost);
         }
     }
 
     public class NeuralNetworkConfiguration
     {
         public Cost Cost { get; set; }
+        public double TrainTestRatio { get; set; }
     }
 
     public enum Cost

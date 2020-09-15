@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using MathNet.Numerics.LinearAlgebra;
+﻿using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra.Double;
 using NeuralNetworks;
 
@@ -11,15 +8,19 @@ namespace NNApp
     {
         static void Main(string[] args)
         {
-            var input = Matrix.Build.Dense(10, 1, 1);
-            var layers = new List<int> {3, 2, 1};
             var config = new NeuralNetworkConfiguration()
             {
-                Cost = Cost.Linear
+                Cost = Cost.Linear,
+                TrainTestRatio = 0.7
             };
-            var network = NeuralNetworkFactory.Create(layers, input, config);
-            network.Train();
-            // var pred = network2.Predict(testX);
+
+            var dataset = DatasetFactory.Create("../../../Examples", config);
+            var input = Matrix.Build.Dense(10, 1, 1);
+            var layers = new List<int> { 3, 2, 1 };
+           
+            var network = NeuralNetworkFactory.Create(layers, dataset, config);
+            network.Train(epochs: 1);
+            // var pred = network.Predict(testX);
         }
     }
 }
